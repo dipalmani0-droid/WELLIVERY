@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VYTA APP</title>
+<style>
+:root{color-scheme:light;--bg:#f6f1e7;--surface:#fffdf8;--ink:#1f2a1c;--muted:#6a7463;--line:#e4dccb;--accent:#2f6b3a;--accent-ink:#fff;--chip:#e6eed8;--tomato:#b8481f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#141a13;--surface:#1c241b;--ink:#eef2e6;--muted:#9aa693;--line:#2c382a;--accent:#8fd19a;--accent-ink:#10200f;--chip:#273524;--tomato:#f0956f}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#141a13;--surface:#1c241b;--ink:#eef2e6;--muted:#9aa693;--line:#2c382a;--accent:#8fd19a;--accent-ink:#10200f;--chip:#273524;--tomato:#f0956f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;padding-bottom:96px}
+h1,h2,.price{font-family:Georgia,"Iowan Old Style","Times New Roman",serif}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px}
+header{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:6px}
+.kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+h1{font-size:clamp(28px,6vw,42px);line-height:1.1;margin:0 0 6px}
+.sub{color:var(--muted);margin:0}
+.cut{display:inline-block;margin-top:10px;font-size:14px;background:var(--chip);padding:4px 12px;border-radius:99px}
+nav{display:flex;gap:8px;overflow-x:auto;padding:12px 0;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+nav button{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 14px;border-radius:99px;font:inherit;font-size:14px;cursor:pointer}
+h2{font-size:24px;margin:26px 0 10px}
+.grid{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:4px 14px 4px 14px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.card h3{margin:0;font-size:17px}
+.card p{margin:0;color:var(--muted);font-size:14px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px}
+.tag{background:var(--chip);padding:2px 8px;border-radius:99px}
+.row{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px}
+.price{font-size:20px;color:var(--tomato);font-weight:700}
+.qty{display:flex;align-items:center;gap:10px}
+.qty button,.add{border:1px solid var(--accent);background:transparent;color:var(--accent);font:inherit;font-weight:600;cursor:pointer;border-radius:99px}
+.qty button{width:34px;height:34px;font-size:18px}
+.add{padding:7px 16px}
+.qty span{min-width:18px;text-align:center;font-weight:700}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--bg);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:none;z-index:10}
+.bar.on{display:block}
+.bar .in{max-width:860px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.btn{border:0;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;padding:12px 22px;border-radius:99px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+label{display:block;font-size:14px;font-weight:600;margin:14px 0 4px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px}
+.two{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:640px){.two{grid-template-columns:1fr 1fr}}
+.sum{background:var(--surface);border:1px solid var(--line);border-radius:4px 14px 4px 14px;padding:14px;margin:12px 0}
+.sum div{display:flex;justify-content:space-between;padding:4px 0}
+.tot{border-top:1px dashed var(--line);margin-top:6px;padding-top:8px!important;font-weight:700}
+.code{font-family:Georgia,serif;font-size:34px;color:var(--tomato);margin:6px 0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#efeeea;--surface:#fff;--ink:#0e1220;--muted:#6b6f78;--line:#e2e1dc;--accent:#0e1220;--accent-ink:#fff;--chip:#f3f2ef;--tomato:#0e1220}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1014;--surface:#171a20;--ink:#f3f4f6;--muted:#9aa0aa;--line:#272b33;--accent:#fff;--accent-ink:#0e1220;--chip:#21252d;--tomato:#f3f4f6}}
+:root[data-theme="dark"]{--bg:#0e1014;--surface:#171a20;--ink:#f3f4f6;--muted:#9aa0aa;--line:#272b33;--accent:#fff;--accent-ink:#0e1220;--chip:#21252d;--tomato:#f3f4f6}
+body{font-family:"Plus Jakarta Sans",-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,.price,.code{font-family:inherit}
+h1{font-weight:600;letter-spacing:-.03em}
+h2{font-size:26px;font-weight:600;letter-spacing:-.02em}
+header{border:0}
+.kicker{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.08em}
+.kicker::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ink)}
+.cut{background:var(--surface);border:1px solid var(--line);font-weight:500}
+nav{gap:10px;padding:14px 0}
+nav button{border-radius:14px;padding:14px 22px;font-weight:600}
+.card{border-radius:16px;padding:10px 10px 14px}
+.card h3,.card p,.card .meta,.card .row{padding:0 6px}
+.ph{height:120px;border-radius:12px;background:var(--bg);display:grid;place-items:center;font-size:52px;margin-bottom:6px}
+.price{font-size:16px;font-weight:700;color:var(--ink)}
+.add{background:var(--accent);color:var(--accent-ink);border:0;padding:8px 16px}
+.add::before{content:"+ "}
+.qty button{border-color:var(--ink);color:var(--ink)}
+.btn{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.bar{background:var(--surface);color:var(--ink);border-top:1px solid var(--line)}
+.sum{border-radius:16px;border-style:solid}
+.code{font-weight:600;color:var(--ink)}
+input,select,textarea{border-radius:12px}
+.ph{height:auto;aspect-ratio:4/3;padding:0;overflow:hidden;position:relative;background:linear-gradient(160deg,#f6f5f1,#e7e5de);margin-bottom:8px}
+.ph svg{width:100%;height:100%;display:block}
+.badge{position:absolute;top:10px;left:10px;background:#0e1220;color:#fff;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:99px;font-weight:600}
+.grid{gap:18px}
+.card{box-shadow:0 1px 2px rgba(14,18,32,.04),0 10px 24px -14px rgba(14,18,32,.18);transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 18px 32px -16px rgba(14,18,32,.3)}
+.hero{display:grid;gap:24px;align-items:center;background:var(--surface);border-radius:28px;padding:28px;grid-template-columns:1fr}
+@media(min-width:700px){.hero{grid-template-columns:1.15fr .85fr;padding:44px}}
+.hero h1{font-size:clamp(32px,6.5vw,54px);margin:6px 0 12px}
+.hero .art{aspect-ratio:1;border-radius:50%;overflow:hidden;max-width:320px;width:100%;margin:0 auto;background:var(--bg)}
+.hero .art svg{width:100%;height:100%;display:block}
+.kpis{display:flex;gap:28px;margin-top:22px;flex-wrap:wrap}
+.kpis b{display:block;font-size:20px;font-weight:600}
+.kpis span{font-size:12px;color:var(--muted)}
+.banner{background:var(--ink);color:var(--bg);border-radius:28px;padding:36px 32px;margin-top:44px}
+.banner h2{margin:0 0 8px;color:var(--bg)}
+.banner p{margin:0;opacity:.7}
+h2{margin-top:40px}
+.lead{font-size:20px;font-weight:600;margin:0 0 6px}
+/* ===== Luxury theme ===== */
+:root{--bg:#f6f2ea;--surface:#fffdf9;--ink:#14110f;--muted:#7a7266;--line:#e6dfd2;--accent:#14110f;--accent-ink:#f6f2ea;--chip:#efe9dc;--tomato:#14110f;--gold:#a8854d;--serif:"Cormorant Garamond","Playfair Display",Georgia,serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0e0c;--surface:#181613;--ink:#f4efe6;--muted:#a39b8d;--line:#2b2722;--accent:#c9a96a;--accent-ink:#14110f;--chip:#221f1a;--tomato:#e9d9b5;--gold:#c9a96a}}
+:root[data-theme="dark"]{--bg:#0f0e0c;--surface:#181613;--ink:#f4efe6;--muted:#a39b8d;--line:#2b2722;--accent:#c9a96a;--accent-ink:#14110f;--chip:#221f1a;--tomato:#e9d9b5;--gold:#c9a96a}
+.wrap{max-width:940px;padding:24px 16px}
+h1,h2,.price,.code,.card h3,.kpis b,.tot{font-family:var(--serif)}
+h2{display:flex;align-items:center;gap:18px;font-size:34px;font-weight:500;letter-spacing:0;margin:56px 0 18px}
+h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.kicker{color:var(--gold);letter-spacing:.22em;font-weight:600}
+.kicker::before{background:var(--gold)}
+.hero{background:#14110f;color:#f4efe6;border:1px solid rgba(201,169,106,.35);border-radius:32px;padding:36px 28px}
+@media(min-width:700px){.hero{padding:64px 56px}}
+.hero h1{font-size:clamp(46px,8vw,84px);font-weight:500;line-height:.98;letter-spacing:-.01em;margin:14px 0 18px}
+.hero h1 em{color:#c9a96a;font-style:italic}
+.hero .lead{font-family:var(--serif);font-style:italic;font-weight:500;font-size:24px;color:#e9d9b5}
+.hero .sub,.hero .kpis span{color:rgba(244,239,230,.62)}
+.hero .cut{background:transparent;color:#e9d9b5;border:1px solid rgba(201,169,106,.5);letter-spacing:.04em}
+.hero .kpis{border-top:1px solid rgba(201,169,106,.25);padding-top:20px;margin-top:28px}
+.hero .kpis b{font-size:26px;font-weight:500;color:#f4efe6}
+.hero .art{background:radial-gradient(circle,#2b2620,#14110f);box-shadow:0 0 0 1px rgba(201,169,106,.55),0 0 0 12px rgba(201,169,106,.07),0 30px 60px -20px #000}
+nav{background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);gap:6px;padding:10px 0;border-bottom:1px solid var(--line)}
+nav button{background:transparent;border:0;border-bottom:2px solid transparent;border-radius:0;padding:10px 16px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+nav button:hover{color:var(--ink);border-bottom-color:var(--gold)}
+.grid{gap:22px}
+.card{border-radius:22px;border:1px solid var(--line);padding:10px 10px 18px;box-shadow:0 1px 2px rgba(20,17,15,.04),0 18px 36px -22px rgba(20,17,15,.28)}
+.card h3{font-size:23px;font-weight:600;line-height:1.1;margin-top:6px}
+.card p{font-size:13.5px}
+.ph{border-radius:14px;background:linear-gradient(160deg,#f3ede1,#e4dac6)}
+.badge{background:rgba(20,17,15,.85);color:#e9d9b5;border:1px solid rgba(201,169,106,.55);backdrop-filter:blur(6px);letter-spacing:.14em;font-size:9.5px}
+.tag{background:transparent;border:1px solid var(--line);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:10px;padding:2px 9px}
+.price{font-size:24px;font-weight:600;color:var(--ink)}
+.add{padding:9px 20px;letter-spacing:.06em;font-size:13px;box-shadow:inset 0 0 0 1px var(--gold)}
+.btn{letter-spacing:.06em;padding:14px 28px;box-shadow:inset 0 0 0 1px var(--gold)}
+.btn.ghost{box-shadow:none;border-color:var(--line)}
+.bar{left:50%;right:auto;width:min(560px,calc(100% - 24px));transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));padding:10px 10px 10px 26px;border-radius:999px;background:#14110f;color:#f4efe6;border:1px solid rgba(201,169,106,.45);box-shadow:0 20px 40px -12px rgba(0,0,0,.5)}
+.bar .btn{background:#c9a96a;color:#14110f;box-shadow:none;padding:12px 24px}
+.sum{border-radius:22px;padding:20px 22px}
+.tot{font-size:24px;font-weight:600}
+.code{font-size:44px;font-weight:500;color:var(--gold)}
+label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+input,select,textarea{background:var(--surface);border-radius:14px;padding:13px 14px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(168,133,77,.22)}
+.banner{background:#14110f;color:#f4efe6;border:1px solid rgba(201,169,106,.35);text-align:center;padding:56px 28px;border-radius:32px}
+.banner h2{display:block;color:#f4efe6;font-size:clamp(30px,5vw,46px);margin:0 0 10px}
+.banner h2::after{display:none}
+.banner p{color:#e9d9b5;opacity:.8}
+.search{display:flex;align-items:center;gap:12px;margin-top:22px;background:rgba(244,239,230,.08);border:1px solid rgba(201,169,106,.45);border-radius:999px;padding:2px 22px;max-width:540px;text-transform:none;letter-spacing:0}
+.search svg{flex:none;width:20px;height:20px;stroke:#c9a96a}
+.search input{background:transparent;border:0;color:#f4efe6;padding:14px 0;font-size:16px;border-radius:0}
+.search input:focus{box-shadow:none}
+.search input::placeholder{color:rgba(244,239,230,.5)}
+.search:focus-within{border-color:#c9a96a;box-shadow:0 0 0 4px rgba(201,169,106,.15)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:24px 0 6px;scrollbar-width:none}
+.chips button{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;padding:9px 18px;border-radius:999px;cursor:pointer}
+.chips button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+nav{overflow-x:auto}
+nav button svg{width:18px;height:18px;vertical-align:-4px;margin-right:8px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.75}
+.rail{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:4px 16px 22px;scrollbar-width:none}
+.rail .card{flex:0 0 270px;scroll-snap-align:start}
+.tier{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--gold);margin-left:8px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="bar" id="bar"><div class="in"><div id="barinfo"></div><button class="btn" data-act="form">Vai al riepilogo</button></div></div>
+<script>
+// ===== MODIFICA QUI il menu del giorno =====
+var CUTOFF = "18:00";
+var SLOTS = ["12:00 – 12:30", "12:30 – 13:00", "13:00 – 13:30"];
+var MENU = [
+ {id:"b1",cat:"Bowl",name:"Poke bowl di salmone",desc:"Riso integrale, salmone, edamame, avocado e sesamo",kcal:620,price:10.0,tags:["Pesce"]},
+ {id:"b2",cat:"Bowl",name:"Buddha bowl vegana",desc:"Quinoa, ceci, zucca arrosto, hummus e semi di girasole",kcal:540,price:8.9,tags:["Vegano","Senza lattosio"]},
+ {id:"p1",cat:"Primi",name:"Farro con verdure grigliate",desc:"Farro perlato, zucchine, peperoni, feta e menta",kcal:480,price:8.4,tags:["Vegetariano"]},
+ {id:"p2",cat:"Primi",name:"Zuppa di lenticchie",desc:"Lenticchie, finocchietto, carote e olio extravergine",kcal:350,price:6.8,tags:["Vegano","Senza glutine"]},
+ {id:"s1",cat:"Secondi",name:"Pollo al limone",desc:"Petto di pollo al forno con purè di cavolfiore",kcal:450,price:9.5,tags:["Senza glutine"]},
+ {id:"s2",cat:"Secondi",name:"Frittata di zucchine",desc:"Uova, zucchine e erbe fresche, con insalata mista",kcal:380,price:7.9,tags:["Vegetariano","Senza glutine"]},
+ {id:"i1",cat:"Insalate",name:"Tonno, fagioli e cipolla",desc:"Tonno al naturale, cannellini, cipolla di Tropea, rucola",kcal:410,price:8.4,tags:["Pesce","Senza glutine"]},
+ {id:"i2",cat:"Insalate",name:"Spinaci, pere e noci",desc:"Spinacino, pera, noci, grana e aceto balsamico",kcal:330,price:7.9,tags:["Vegetariano","Senza glutine"]},
+ {id:"d1",cat:"Dessert",name:"Yogurt greco e frutti di bosco",desc:"Yogurt magro, mirtilli, lamponi e un filo di miele",kcal:180,price:3.5,tags:["Vegetariano","Senza glutine"]},
+ {id:"d2",cat:"Dessert",name:"Macedonia di stagione",desc:"Frutta fresca tagliata al momento",kcal:120,price:3,tags:["Vegano","Senza glutine"]}
+];
+// ===========================================
+var EMO = {Bowl:"🥗",Primi:"🍲",Secondi:"🍗",Insalate:"🥬",Dessert:"🍓"};
+var PAL = {b1:["#f08a6b","#8cb369","#f4e3c1","#6b8f3a"],b2:["#e9a23b","#c9a66b","#8a9a5b","#f1e6cf"],p1:["#d9b77e","#6e9a4a","#e8b04a","#f4f1e6"],p2:["#b5651d","#e07b39","#d9c27a","#6e9a4a"],s1:["#e7c48a","#f4f1e6","#8cb369","#e8d44d"],s2:["#f0d36b","#8cb369","#e07b39","#f4f1e6"],i1:["#9bc26b","#c95f6a","#e9d8b4","#7aa25a"],i2:["#6e9a4a","#d8e08f","#b98a5a","#f4f1e6"],d1:["#f4f1e6","#7b3fa0","#c0392b","#e8b04a"],d2:["#e74c3c","#f39c12","#8cb369","#f7dc6f"]};
+var BEST = {b1:"Più richiesto",b2:"Novità",s1:"Consigliato"};
+function art(id) {
+  var c = PAL[id] || PAL.b1, s = 0;
+  for (var i = 0; i < id.length; i++) s += id.charCodeAt(i) * (i + 7);
+  function r() { s = (s * 9301 + 49297) % 233280; return s / 233280; }
+  var o = '<svg viewBox="0 0 200 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><ellipse cx="100" cy="138" rx="66" ry="6" fill="#0e1220" opacity=".1"/><circle cx="100" cy="72" r="62" fill="#fff"/><circle cx="100" cy="72" r="62" fill="none" stroke="#e2e1dc" stroke-width="2"/><circle cx="100" cy="72" r="50" fill="' + c[3] + '" opacity=".35"/>';
+  for (var k = 0; k < 26; k++) {
+    var a = r() * 6.283, d = Math.sqrt(r()) * 42, x = (100 + Math.cos(a) * d).toFixed(1), y = (72 + Math.sin(a) * d).toFixed(1), rad = 4 + r() * 8;
+    o += '<ellipse cx="' + x + '" cy="' + y + '" rx="' + rad.toFixed(1) + '" ry="' + (rad * (0.6 + r() * 0.4)).toFixed(1) + '" fill="' + c[k % 3] + '" transform="rotate(' + Math.floor(r() * 180) + ' ' + x + ' ' + y + ')"/>';
+  }
+  return o + '</svg>';
+}
+var E = function (x, y, a, b, f, r) { return '<ellipse cx="' + x + '" cy="' + y + '" rx="' + a + '" ry="' + b + '" fill="' + f + '" transform="rotate(' + (r || 0) + ' ' + x + ' ' + y + ')"/>'; };
+var R = function (x, y, w, h, f, r) { return '<rect x="' + (x - w / 2) + '" y="' + (y - h / 2) + '" width="' + w + '" height="' + h + '" rx="2" fill="' + f + '" transform="rotate(' + (r || 0) + ' ' + x + ' ' + y + ')"/>'; };
+var C = function (x, y, r, f, s) { return '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + f + '"' + (s ? ' stroke="' + s + '" stroke-width="1"' : '') + '/>'; };
+var G = function (f, n, R0, a, b) { var o = ""; for (var i = 0; i < n; i++) { var t = i * 2.399, d = Math.sqrt((i + 0.5) / n) * R0; o += E((100 + Math.cos(t) * d).toFixed(1), (72 + Math.sin(t) * d).toFixed(1), a, b, f, Math.round(t * 57) % 180); } return o; };
+var M = function (a, fn) { return a.map(fn).join(""); };
+var BW = C(100, 72, 52, "#f4efe4", "#d8d2c4"), PL = C(100, 72, 50, "#fbfaf6", "#ebe8df");
+var DISH = {
+ b1: function () { return BW + C(100, 72, 44, "#cdb17e") + G("#eadcb8", 60, 42, 2.4, 1.2) + G("#fffdf0", 16, 38, 1.3, 0.7) + R(80, 60, 14, 12, "#ee8260", -15) + R(80, 59, 8, 6, "#f7a98f", -15) + R(96, 50, 13, 11, "#f4967a", 20) + R(72, 78, 13, 12, "#ee8260", 10) + R(88, 70, 12, 11, "#f4967a", 35) + E(120, 90, 12, 5, "#9bc450", 30) + E(120, 90, 7, 2.5, "#dfeaa5", 30) + E(106, 98, 11, 4.5, "#a9cf62", -12) + C(122, 58, 3.6, "#69a84f") + C(129, 66, 3.6, "#5f9c46") + C(116, 51, 3.6, "#69a84f") + C(131, 77, 3.6, "#5f9c46") + C(86, 94, 6, "#c4e3a8", "#7fb05c") + C(74, 92, 5.5, "#c4e3a8", "#7fb05c"); },
+ b2: function () { return BW + C(100, 72, 44, "#efe3c0") + G("#d9c38f", 50, 42, 2, 1.3) + C(100, 72, 13, "#ead7aa", "#d2bb86") + M([[118, 58], [126, 66], [122, 77], [113, 86], [128, 56], [130, 76]], function (p) { return C(p[0], p[1], 3.6, "#e4b968", "#c99a45"); }) + R(80, 88, 10, 10, "#e8892b", 15) + R(90, 97, 9, 9, "#f0a04b", -10) + R(71, 99, 9, 9, "#e8892b", 30) + E(84, 52, 12, 6, "#5d8f3a", -30) + E(95, 45, 10, 5, "#6fa14a", 20) + E(74, 62, 9, 4.5, "#6fa14a", -60) + G("#3b3a2a", 8, 36, 1.4, 0.8); },
+ p1: function () { return PL + G("#caa56a", 70, 38, 2.6, 1.4) + R(82, 58, 24, 6.5, "#8cb04d", -25) + R(112, 64, 17, 7.5, "#e0452d", 20) + R(118, 80, 16, 7.5, "#f2b632", -15) + R(92, 86, 17, 7.5, "#e0452d", 40) + R(100, 72, 8, 8, "#fffdf4", 10) + R(84, 74, 7, 7, "#fffdf4", -5) + R(120, 94, 7, 7, "#fffdf4", 25) + E(104, 56, 5.5, 3, "#3f8a3c", 30) + E(76, 86, 5, 2.8, "#3f8a3c", -40); },
+ p2: function () { return BW + C(100, 72, 44, "#b9752f") + G("#8a4f1d", 60, 41, 2.4, 1.5) + G("#d99a4a", 40, 41, 2.1, 1.2) + M([[84, 60], [118, 66], [96, 92], [112, 84], [78, 80]], function (p) { return C(p[0], p[1], 3.2, "#e87a2c"); }) + E(92, 50, 6, 2.5, "#4f8f3a", -30) + E(112, 56, 5, 2.2, "#4f8f3a", 20) + '<path d="M64 62Q82 46 104 48" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>'; },
+ s1: function () { return PL + E(96, 88, 32, 20, "#f4efdf") + '<path d="M74 88Q96 76 120 90" fill="none" stroke="#e5ddc4" stroke-width="2"/>' + E(100, 58, 30, 11, "#d9ac6b", -10) + E(100, 57, 26, 8, "#ecca92", -10) + E(104, 76, 28, 10, "#d9ac6b", -8) + E(104, 75, 24, 7, "#ecca92", -8) + '<path d="M80 54L90 62M92 50L102 58M104 48L114 56" stroke="#a8742e" stroke-width="1.6" stroke-linecap="round"/>' + C(130, 96, 11, "#f6e05e", "#e3c22e") + C(130, 96, 8, "#fbf0a0") + '<path d="M130 88V104M122 92L138 100M138 92L122 100" stroke="#f1d43c" stroke-width="1"/>' + E(72, 90, 5, 2.6, "#3f8a3c", -30) + E(80, 98, 4.5, 2.4, "#4f9a45", 20); },
+ s2: function () { return PL + C(86, 72, 33, "#d9b13a") + C(86, 72, 30, "#f2d36b") + M([[74, 62], [90, 56], [96, 76], [78, 82], [70, 72]], function (p) { return C(p[0], p[1], 3.6, "#7aa84a", "#5c8a34"); }) + E(86, 70, 4, 1.8, "#3f8a3c", 30) + '<path d="M86 72L124 56A40 40 0 0 1 124 90Z" fill="#fbfaf6"/>' + E(122, 60, 10, 4.5, "#6aa84f", -30) + E(128, 72, 11, 4.5, "#5b9a3a", 10) + E(122, 86, 10, 4.5, "#6aa84f", 30) + C(124, 72, 4.5, "#d9453a") + C(132, 64, 3.5, "#d9453a"); },
+ i1: function () { return PL + G("#5b9a3a", 34, 42, 8, 3.4) + G("#7bb552", 22, 36, 7, 3) + E(88, 66, 11, 7.5, "#d3ad8d", 15) + E(104, 60, 9.5, 6.5, "#e3c4a8", -20) + E(98, 76, 10, 6, "#d9b99a", 30) + G("#f6eedb", 14, 34, 4, 2.6) + M([[122, 66], [80, 92], [96, 100]], function (p) { return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="7" fill="none" stroke="#b5476f" stroke-width="2.2"/>'; }) + C(116, 92, 4, "#d9453a") + C(76, 68, 4, "#d9453a"); },
+ i2: function () { return PL + G("#4f8f3a", 30, 42, 9, 4) + G("#6aa84f", 24, 36, 7.5, 3.4) + E(88, 66, 13, 5, "#ecdba0", -30) + E(88, 66, 9, 3, "#f7efc8", -30) + E(104, 84, 13, 5, "#ecdba0", 20) + E(104, 84, 9, 3, "#f7efc8", 20) + E(76, 84, 12, 4.6, "#ecdba0", 60) + M([[116, 64], [84, 50], [124, 84], [98, 98]], function (p) { return E(p[0], p[1], 6, 4.5, "#a9764a", 20) + E(p[0], p[1], 3, 2, "#c79566", 20); }) + R(118, 76, 9, 3, "#f5e6a8", 30) + R(94, 72, 9, 3, "#f5e6a8", -20) + R(108, 94, 8, 3, "#f5e6a8", 10) + '<path d="M70 76Q90 66 104 74T134 66" fill="none" stroke="#3b1d12" stroke-opacity=".75" stroke-width="1.8" stroke-linecap="round"/>'; },
+ d1: function () { return BW + C(100, 72, 44, "#fffdf6") + M([[86, 62], [96, 56], [112, 66], [104, 80], [88, 86]], function (p) { return C(p[0], p[1], 4.6, "#3f4a8f", "#2c3568"); }) + M([[100, 68], [118, 80], [78, 74], [94, 94]], function (p) { return C(p[0], p[1], 4.4, "#d33a5a", "#a82342"); }) + '<path d="M70 72Q84 60 98 72T126 72" fill="none" stroke="#e8a73a" stroke-width="2.6" stroke-linecap="round" opacity=".9"/>' + E(108, 52, 5, 2.5, "#3f8a3c", -30) + E(114, 56, 5, 2.5, "#4f9a45", 20); },
+ d2: function () { return BW + C(100, 72, 44, "#fbf7ec") + M([[84, 60, 20], [112, 58, -30], [96, 90, 10]], function (p) { return E(p[0], p[1], 7, 5, "#e8453c", p[2]) + E(p[0], p[1], 3.5, 2.2, "#f58b82", p[2]); }) + M([[100, 68], [78, 84]], function (p) { return C(p[0], p[1], 7.5, "#8cc152", "#6a9a38") + C(p[0], p[1], 3, "#e5f2b3"); }) + M([[120, 76], [90, 78]], function (p) { return C(p[0], p[1], 6, "#f6e27a", "#d9bf4a"); }) + E(112, 92, 9, 4.5, "#f39c2b", -20) + E(124, 62, 9, 4.5, "#f7a640", 40) + C(76, 66, 4, "#a3c85a") + C(82, 70, 4, "#a3c85a") + C(106, 80, 3.8, "#3f4a8f") + C(70, 96, 3.8, "#3f4a8f"); }
+};
+art = function (id) { return '<svg viewBox="0 0 200 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><ellipse cx="100" cy="138" rx="66" ry="6" fill="#0e1220" opacity=".1"/>' + C(100, 72, 62, "#fff", "#e2e1dc") + (DISH[id] || DISH.b1)() + '</svg>'; };
+function hero() {
+  return '<section class="hero"><div><p class="kicker">' + greet() + '</p><h1>Your lunch.<br><em>Your time.</em><br>Your workplace.</h1><p class="lead">The future of lunch is here.</p><p class="sub" style="text-transform:capitalize">' + tomorrow + '</p><span class="cut">Prenota entro le ' + CUTOFF + ' di oggi</span>' + searchHtml() + '<div class="kpis"><div><b>' + MENU.length + '</b><span>Piatti</span></div><div><b>' + SLOTS[0].split(" ")[0] + '</b><span>Prima consegna</span></div><div><b>In ufficio</b><span>Direttamente da te</span></div></div></div><div class="art">' + art("b1") + '</div></section>';
+}
+var qty = {}, step = "menu", order = null, saved = {};
+try { saved = JSON.parse(localStorage.getItem("cliente") || "{}"); } catch (e) {}
+var app = document.getElementById("app"), bar = document.getElementById("bar");
+var eur = function (n) { return new Intl.NumberFormat("it-IT", {style:"currency", currency:"EUR"}).format(n); };
+var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); };
+var tomorrow = new Date(Date.now() + 864e5).toLocaleDateString("it-IT", {weekday:"long", day:"numeric", month:"long"});
+var cats = MENU.map(function (m) { return m.cat; }).filter(function (c, i, a) { return a.indexOf(c) === i; });
+function items() { return MENU.filter(function (m) { return qty[m.id] > 0; }); }
+function count() { return items().reduce(function (s, m) { return s + qty[m.id]; }, 0); }
+function total() { return items().reduce(function (s, m) { return s + qty[m.id] * m.price; }, 0); }
+function head() {
+  return '<header><p class="kicker">Pranzo sano in azienda</p><h1>Menu di domani</h1><p class="sub" style="text-transform:capitalize">' + tomorrow + '</p><span class="cut">Prenota entro le ' + CUTOFF + ' di oggi</span></header>';
+}
+function card(m) {
+  var q = qty[m.id] || 0;
+  var ctl = q ? '<div class="qty"><button data-act="dec" data-id="' + m.id + '" aria-label="Togli">−</button><span>' + q + '</span><button data-act="inc" data-id="' + m.id + '" aria-label="Aggiungi">+</button></div>' : '<button class="add" data-act="inc" data-id="' + m.id + '">Aggiungi</button>';
+  return '<article class="card"><div class="ph">' + art(m.id) + (BEST[m.id] ? '<span class="badge">' + BEST[m.id] + '</span>' : "") + '</div><h3>' + m.name + '</h3><p>' + m.desc + '</p><div class="meta">' + (m.rating ? '<span class="tag">★ ' + m.rating + '</span>' : "") + '<span class="tag">' + m.kcal + ' kcal</span>' + m.tags.map(function (t) { return '<span class="tag">' + t + '</span>'; }).join("") + '</div><div class="row"><span class="price">' + eur(m.price) + '<small class="tier">' + tier(m.price) + '</small></span>' + ctl + '</div></article>';
+}
+function tier(p) { return p < 6 ? "€" : p < 8.5 ? "€€" : "€€€"; }
+var CHEF = ["b2", "p1", "s1", "i2"], TREND = ["b1", "s1", "d1", "i1"];
+var FILTERS = [["", "Tutti"], ["Vegano", "Vegano"], ["Vegetariano", "Vegetariano"], ["Senza glutine", "Senza glutine"], ["Pesce", "Pesce"], ["light", "Sotto 450 kcal"]];
+var ICON = {
+ Bowl: '<svg viewBox="0 0 24 24"><path d="M3 11h18a9 9 0 0 1-18 0zM8 7c0-2 2-2 2-4M13 7c0-2 2-2 2-4"/></svg>',
+ Primi: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M8 12a4 4 0 0 1 8 0M10 15a2 2 0 0 1 4 0"/></svg>',
+ Secondi: '<svg viewBox="0 0 24 24"><path d="M14 4a6 6 0 0 1 3 9l-3 2-5-5 2-3zM9 15l-4 4M7 17l-2-2"/></svg>',
+ Insalate: '<svg viewBox="0 0 24 24"><path d="M5 19C5 10 10 5 19 5c0 9-5 14-14 14zM5 19l8-8"/></svg>',
+ Dessert: '<svg viewBox="0 0 24 24"><path d="M5 13h14l-1.500 7h-11zM7 13a5 5 0 0 1 10 0M12 5V3"/></svg>'
+};
+var query = "", filt = "";
+function greet() { var h = new Date().getHours(); return (h < 12 ? "Buongiorno" : h < 18 ? "Buon pomeriggio" : "Buonasera") + (saved.nome ? ", " + esc(saved.nome.split(" ")[0]) : ""); }
+function searchHtml() { return '<label class="search"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.500-3.500"/></svg><input id="q" type="search" autocomplete="off" placeholder="Cerca un piatto o un ingrediente…" value="' + esc(query) + '"></label>'; }
+function chipsHtml() { return '<div class="chips">' + FILTERS.map(function (f) { return '<button data-act="filt" data-id="' + f[0] + '"' + (filt === f[0] ? ' class="on"' : '') + '>' + f[1] + '</button>'; }).join("") + '</div>'; }
+function match(m) {
+  var q = query.toLowerCase(), ok = !q || (m.name + " " + m.desc + " " + m.cat).toLowerCase().indexOf(q) > -1;
+  if (!filt) return ok;
+  if (filt === "light") return ok && m.kcal < 450;
+  if (filt === "Vegetariano") return ok && (m.tags.indexOf("Vegetariano") > -1 || m.tags.indexOf("Vegano") > -1);
+  return ok && m.tags.indexOf(filt) > -1;
+}
+function byIds(a) { return a.map(function (i) { return MENU.filter(function (m) { return m.id === i; })[0]; }).filter(Boolean); }
+function lastIds() { try { return JSON.parse(localStorage.getItem("ultimo") || "[]"); } catch (e) { return []; } }
+function rail(t, l) { return l.length ? '<section><h2>' + t + '</h2><div class="rail">' + l.map(card).join("") + '</div></section>' : ""; }
+function results() {
+  if (query || filt) {
+    var f = MENU.filter(match);
+    return '<h2>' + f.length + (f.length === 1 ? ' risultato' : ' risultati') + '</h2>' + (f.length ? '<div class="grid">' + f.map(card).join("") + '</div>' : '<p class="sub">Nessun piatto corrisponde: prova con un altro filtro.</p>');
+  }
+  var li = lastIds();
+  return (li.length ? rail("Ordina di nuovo", byIds(li)) : rail("Consigliati per iniziare", byIds(["b1", "b2", "s1", "i2"]))) +
+    rail("La selezione dello chef", byIds(CHEF)) + rail("I più richiesti", byIds(TREND)) + rail("Leggeri, sotto 400 kcal", MENU.filter(function (m) { return m.kcal < 400; })) +
+    cats.map(function (c) { return '<section id="sec-' + c + '"><h2>' + c + '</h2><div class="grid">' + MENU.filter(function (m) { return m.cat === c; }).map(card).join("") + '</div></section>'; }).join("");
+}
+function menuView() {
+  var nav = '<nav>' + cats.map(function (c) { return '<button data-act="go" data-id="' + c + '">' + (ICON[c] || "") + c + '</button>'; }).join("") + '</nav>';
+  var secs = cats.map(function (c) {
+    return '<section id="sec-' + c + '"><h2>' + c + '</h2><div class="grid">' + MENU.filter(function (m) { return m.cat === c; }).map(card).join("") + '</div></section>';
+  }).join("");
+  return hero() + chipsHtml() + nav + '<div id="res">' + results() + '</div><section class="banner"><h2>Pranzo sano, senza uscire dall’ufficio.</h2><p>Prenota entro le ' + CUTOFF + ' e ricevi domani direttamente alla tua scrivania.</p></section>';
+}
+function formView() {
+  var lines = items().map(function (m) { return '<div><span>' + qty[m.id] + ' × ' + m.name + '</span><span>' + eur(qty[m.id] * m.price) + '</span></div>'; }).join("");
+  var opts = SLOTS.map(function (s) { return '<option' + (saved.slot === s ? " selected" : "") + '>' + s + '</option>'; }).join("");
+  return head() + '<h2>Il tuo ordine</h2><div class="sum">' + lines + '<div class="tot"><span>Totale</span><span>' + eur(total()) + '</span></div></div>' +
+  '<h2>Dove consegniamo</h2><form id="f"><div class="two"><div><label for="n">Nome e cognome</label><input id="n" required autocomplete="name" value="' + esc(saved.nome || "") + '"></div>' +
+  '<div><label for="t">Telefono</label><input id="t" type="tel" required autocomplete="tel" value="' + esc(saved.tel || "") + '"></div>' +
+  '<div><label for="a">Azienda</label><input id="a" required value="' + esc(saved.azienda || "") + '"></div>' +
+  '<div><label for="r">Piano / reparto</label><input id="r" placeholder="es. 2° piano, Amministrazione" value="' + esc(saved.reparto || "") + '"></div></div>' +
+  '<label for="s">Fascia di consegna</label><select id="s">' + opts + '</select>' +
+  '<label for="x">Note o allergie</label><textarea id="x" rows="3" placeholder="es. senza noci, salsa a parte"></textarea>' +
+  '<div class="actions"><button class="btn" type="submit">Conferma prenotazione</button><button class="btn ghost" type="button" data-act="back">Torna al menu</button></div></form>';
+}
+function doneView() {
+  var o = order;
+  var lines = o.rows.map(function (r) { return '<div><span>' + r.q + ' × ' + r.name + '</span><span>' + eur(r.q * r.price) + '</span></div>'; }).join("");
+  return head() + '<h2>Prenotazione confermata</h2><p class="sub">Il tuo codice ordine</p><div class="code">' + o.code + '</div>' +
+  '<div class="sum">' + lines + '<div class="tot"><span>Totale</span><span>' + eur(o.tot) + '</span></div></div>' +
+  '<p>Consegna per <strong>' + esc(o.nome) + '</strong> presso <strong>' + esc(o.azienda) + '</strong>' + (o.reparto ? ' (' + esc(o.reparto) + ')' : '') + ', domani tra le <strong>' + o.slot + '</strong>.</p>' +
+  '<div class="actions"><button class="btn" data-act="new">Nuovo ordine</button></div>';
+}
+function render() {
+  app.innerHTML = '<div style="display:none"></div>' + (step === "menu" ? menuView() : step === "form" ? formView() : doneView());
+  var n = count();
+  bar.className = "bar" + (step === "menu" && n ? " on" : "");
+  document.getElementById("barinfo").innerHTML = '<strong>' + n + (n === 1 ? " piatto" : " piatti") + '</strong> · ' + eur(total());
+  var f = document.getElementById("f");
+  if (f) f.onsubmit = submit;
+}
+function submit(e) {
+  e.preventDefault();
+  var v = function (id) { return document.getElementById(id).value.trim(); };
+  var data = {nome:v("n"), tel:v("t"), azienda:v("a"), reparto:v("r"), slot:v("s")};
+  try { localStorage.setItem("cliente", JSON.stringify(data)); } catch (er) {}
+  saved = data; try { localStorage.setItem("ultimo", JSON.stringify(items().map(function (m) { return m.id; }))); } catch (er2) {}
+  order = {code:"PS-" + (1000 + Math.floor(Math.random() * 9000)), nome:data.nome, azienda:data.azienda, reparto:data.reparto, slot:data.slot, note:v("x"),
+    rows:items().map(function (m) { return {q:qty[m.id], name:m.name, price:m.price}; }), tot:total()};
+  // Qui andrà l'invio reale dell'ordine al tuo sistema (API/backend).
+  step = "done"; render(); window.scrollTo(0, 0);
+}
+document.addEventListener("click", function (e) {
+  var b = e.target.closest("[data-act]"); if (!b) return;
+  var act = b.dataset.act, id = b.dataset.id;
+  if (act === "inc") qty[id] = (qty[id] || 0) + 1;
+  else if (act === "dec") qty[id] = Math.max(0, (qty[id] || 0) - 1);
+  else if (act === "go") { var el = document.getElementById("sec-" + id); if (el) el.scrollIntoView({behavior:"smooth"}); return; }
+  else if (act === "form") { step = "form"; window.scrollTo(0, 0); }
+  else if (act === "filt") filt = id;
+  else if (act === "back") step = "menu";
+  else if (act === "new") { qty = {}; order = null; step = "menu"; window.scrollTo(0, 0); }
+  var y = window.scrollY; render(); if (act === "inc" || act === "dec" || act === "filt") window.scrollTo(0, y);
+});
+document.addEventListener("input", function (e) { if (e.target.id === "q") { query = e.target.value.trim(); document.getElementById("res").innerHTML = results(); } });
+render();
+</script>
+</body>
+</html>
